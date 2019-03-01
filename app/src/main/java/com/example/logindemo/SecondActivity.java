@@ -33,6 +33,7 @@ public class SecondActivity extends AppCompatActivity {
 
         firebaseAuth.signOut();
         finish();
+
         startActivity(new Intent(SecondActivity.this,MainActivity.class));
     }
     @Override

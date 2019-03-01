@@ -1,9 +1,12 @@
 package com.example.logindemo;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,7 +23,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     ImageView profilePic;
     TextView profileName,profileAge,profileEmail;
-    Button profileUpdate;
+    Button profileUpdate,changepassword;
     FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
 
@@ -28,15 +31,36 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        profilePic = findViewById(R.id.ivProfilePic);
-        profileName = findViewById(R.id.tvProfileName);
-        profileAge = findViewById(R.id.tvProfileAge);
-        profileEmail = findViewById(R.id.tvProfileUsername);
-        profileUpdate = findViewById(R.id.btnProfileUpdate);
+        profilePic = findViewById(R.id.ivPicUpdate);
+        profileName = findViewById(R.id.tvNameUpdate);
+        profileAge = findViewById(R.id.tvAgeUpdate);
+        profileEmail = findViewById(R.id.tvEmailUpdate);
+        profileUpdate = findViewById(R.id.btnEditProfile);
+        changepassword = findViewById(R.id.btnChangePassword);
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        progressDialog.setMessage("LOADING INFO PLEASE WAIT!");
+        progressDialog.show();
+
+        //TO START PROFILE CHANGE ACTIVITY
+        profileUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ProfileActivity.this,Updateprofile.class));
+            }
+        });
+
+        //RETRIVING FROM DATABASE
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
 
-        try {
+            // IDK WHY BUT THIS ACTIVITY WASN'T FINISHING WHEN USER SIGNS OUT AND WAS TRYING TO ACCESS DATABASE USING UID
+            //SO I COMPARED CURRENT USER TO NULL AND IF CONDITION IS TRUE FINISHING THE ACTIVITY
+            if(firebaseAuth.getCurrentUser() == null){
+                finish();
+            }
+            //ERROR REMOVED
+
             DatabaseReference databaseReference = firebaseDatabase.getReference(firebaseAuth.getUid());
             databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -46,6 +70,7 @@ public class ProfileActivity extends AppCompatActivity {
                     profileAge.setText("AGE:" + userProfil.getAge());
                     profileName.setText("NAME:" + userProfil.getName());
                     profileEmail.setText("USEREMAIL:" + userProfil.getEmail());
+                    progressDialog.dismiss();
 
                 }
 
@@ -56,10 +81,26 @@ public class ProfileActivity extends AppCompatActivity {
 
                 }
             });
-        }catch(Exception e)
-        {
-            Log.e("FUCK",e.toString());
-        }
+        //RETRIVING FROM DATABASE DONE
 
+        //PASSWORD CHANGE INTENT
+        changepassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ProfileActivity.this,UpdatePassword.class));
+                finish();
+            }
+        });
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                onBackPressed();
+                finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
