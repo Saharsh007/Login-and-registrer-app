@@ -32,8 +32,10 @@ public class PasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_password);
         passwordemail =  (EditText)findViewById(R.id.etPasswordEmail);
         resetpassword = (Button)findViewById(R.id.btnPasswordReset);
-        firebaseAuth = FirebaseAuth.getInstance();
         progressDialog = new ProgressDialog(this);
+
+        //MAIN CODE TO CHANGE PASSWORD
+        firebaseAuth = FirebaseAuth.getInstance();
         resetpassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,6 +65,8 @@ public class PasswordActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //MAIN CODE ENDS
     }
 
 }
