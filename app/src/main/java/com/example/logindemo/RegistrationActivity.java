@@ -187,6 +187,7 @@ public class RegistrationActivity extends AppCompatActivity {
          FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
          DatabaseReference databaseReference = firebaseDatabase.getReference(firebaseAuth.getUid());
          //for image uplaod
+
          StorageReference imageReference = storageReference.child(firebaseAuth.getUid()).child("Images").child("ProfilePic");//IN DATABASE userid/images/ProfilePic
          UploadTask uploadTask = imageReference.putFile(imagePath);
          uploadTask.addOnFailureListener(new OnFailureListener() {
