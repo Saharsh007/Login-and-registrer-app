@@ -39,12 +39,13 @@ public class RegistrationActivity extends AppCompatActivity {
     ImageView userProfilePic;
     String name,password,email,age;
     ProgressDialog progressDialogReg;
-    StorageReference storageReference;
 
     FirebaseStorage firebaseStorage;
 
     ////////LOADING IMAGE FROM GALARY
      static int PICK_IMAGE = 123;
+    StorageReference storageReference;
+
     Uri imagePath;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -130,18 +131,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
     }
 
-    void setupUIViews(){
-        userName =findViewById(R.id.etUserName);
-        userPassword =  findViewById(R.id.etUserPassword);
-        userEmail = findViewById(R.id.etUserEmail);
-        regButton = findViewById(R.id.btnRegister);
-        userLogin = findViewById(R.id.tvUserLogin);
-        userAge = findViewById(R.id.etAge);
-        userProfilePic = findViewById(R.id.ivProfile);
-        progressDialogReg = new ProgressDialog(this);
-
-     }
-
+     ///////////////////THIS FUNCTION CHECKS IF NONE OF THE FIELDS ARE LEFT EMPTY
      boolean validate() {
 
         Boolean result = true;
@@ -158,6 +148,9 @@ public class RegistrationActivity extends AppCompatActivity {
 
         return result;
      }
+    ///////////////////THIS FUNCTION CHECKS IF NONE OF THE FIELDS ARE LEFT EMPTY
+
+
 
 
     //THIS FUNCTION IS FOR SENDING VERIFIACTION EMAIL TO REGISTERED EMAIL ADDRESS ,EXECUTES ONLY WHEN SUCCESSFULLY REGISTERED
@@ -183,6 +176,8 @@ public class RegistrationActivity extends AppCompatActivity {
          }
      }
 
+
+     //SENDING USERDATA TO DATABASE
      void setUserData(){
          FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
          DatabaseReference databaseReference = firebaseDatabase.getReference(firebaseAuth.getUid());
@@ -207,4 +202,19 @@ public class RegistrationActivity extends AppCompatActivity {
           UserProfil userProfil = new UserProfil(age,email,name);
           databaseReference.setValue(userProfil);
      }
+
+     //SENDING USER DATA TO FIREBASE DONE
+
+
+    void setupUIViews(){
+        userName =findViewById(R.id.etUserName);
+        userPassword =  findViewById(R.id.etUserPassword);
+        userEmail = findViewById(R.id.etUserEmail);
+        regButton = findViewById(R.id.btnRegister);
+        userLogin = findViewById(R.id.tvUserLogin);
+        userAge = findViewById(R.id.etAge);
+        userProfilePic = findViewById(R.id.ivProfile);
+        progressDialogReg = new ProgressDialog(this);
+
+    }
 }

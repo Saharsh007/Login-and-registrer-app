@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,7 +40,7 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        profilePic = findViewById(R.id.ivPicUpdate);
+        profilePic = findViewById(R.id.ivProfilePicUpdate);
         profileName = findViewById(R.id.tvNameUpdate);
         profileAge = findViewById(R.id.tvAgeUpdate);
         profileEmail = findViewById(R.id.tvEmailUpdate);
@@ -55,8 +54,11 @@ public class ProfileActivity extends AppCompatActivity {
         ////RETRIEVING IMAGE FROM FIREBASE STORAGE
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        firebaseStorage  = FirebaseStorage.getInstance();
+
         progressDialog.setMessage("IMAGE LOADING!");
+        firebaseStorage  = FirebaseStorage.getInstance();
+
+        /////////LOADING IMAGE FROM FIREBASE AND DISPLAYING DONE
         StorageReference storageReference = firebaseStorage.getReference();
         storageReference.child(firebaseAuth.getUid()).child("Images/ProfilePic").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -74,6 +76,8 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        /////////LOADING IMAGE FROM FIREBASE AND DISPLAYING DONE
+
 
         //TO START PROFILE CHANGE ACTIVITY
         profileUpdate.setOnClickListener(new View.OnClickListener() {
@@ -87,12 +91,6 @@ public class ProfileActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
 
-            // IDK WHY BUT THIS ACTIVITY WASN'T FINISHING WHEN USER SIGNS OUT AND WAS TRYING TO ACCESS DATABASE USING UID
-            //SO I COMPARED CURRENT USER TO NULL AND IF CONDITION IS TRUE FINISHING THE ACTIVITY
-            if(firebaseAuth.getCurrentUser() == null){
-                finish();
-            }
-            //ERROR REMOVED
 
             DatabaseReference databaseReference = firebaseDatabase.getReference(firebaseAuth.getUid());
             databaseReference.addValueEventListener(new ValueEventListener() {
@@ -127,6 +125,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
+    //THIS IS FOR BACK BUTTON TO GO BACK TO THE LAST ACTIVITY FINISHING THE PREVIOUS ACTIVITY
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
@@ -136,4 +135,9 @@ public class ProfileActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    //THIS IS FOR BACK BUTTON TO GO BACK TO THE LAST ACTIVITY FINISHING THE PREVIOUS ACTIVITY
+
+
+
+
 }
